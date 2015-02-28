@@ -1,0 +1,82 @@
+<!doctype html>
+<html ng-app>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.13/angular.min.js"></script>
+    <script type="text/JavaScript" src="ws31.js"></script>
+    <script type="text/javascript">
+	var client = new Messaging.Client("pcacer", 80, "mosqOtti");
+		client.onMessageArrived = messageArrived;
+		client.onMessageDelivered = messageDelivered;
+	function onConnectSuccess(responseObj) {
+		console.log("connected %s",responseObj);
+		connected = true;
+	};
+	
+	function onConnectionLost(err) {
+		connected = false;
+		if(err){
+			disconnectError = err.errorCode;
+			disconnectErrorMsg = err.errorMessage;
+		}
+		console.log("connection lost. ErrorCode: %s, ErrorMsg: %s",disconnectError,disconnectErrorMsg);
+	};
+	
+	function onConnectFailure(err){
+		connected = false;
+		console.log('Connect fail. ErrorCode: %s, ErrorMsg: %s',err.errCode,err.errorMessage);
+	};
+	function onSubscribeSuccess() {
+		subscribed = true;
+		console.log("subscribed",subscribed);
+	};
+	
+	function onSubscribeFailure(err) {
+		subscribed = false;
+		console.log("subscribe fail. ErrorCode: %s, ErrorMsg: %s",err.errCode,err.errorMessage);
+	};
+	function onUnsubscribeSuccess() {
+		subscribed = false;
+		console.log("unsubscribed",subscribed);
+	};
+	function messageDelivered(response) {
+		console.log("messageDelivered. topic:%s, duplicate:%s, payloadString:%s,qos:%s,retained:%s",response.destinationName,response.duplicate,response.payloadString,response.qos,response.retained);
+		isMessageDelivered = true;
+		//reponse.invocationContext.onMessageArrived = null;
+	};
+	
+	function messageArrived(message) {
+		console.log("messageArrived.",'topic:',message.destinationName,' ;content:',message.payloadString);
+		isMessageReceived = true;
+		strMessageReceived = message.payloadString;
+		strTopicReceived = message.destinationName;		
+		//reponse.invocationContext.onMessageArrived = null;
+	};
+    function doConnect() {
+//		client = new Messaging.Client("pcacer", 80, "mosqOtti");
+		client.connect({onSuccess:onConnectSuccess,onFailure:onConnectFailure});
+	};
+function doDisconnect() {
+		client.disconnect();
+	};
+	function doSubscribe() {
+		client.subscribe("Stellaris/#", {onSuccess:onSubscribeSuccess,onFailure:onSubscribeFailure});
+	};
+
+
+    </script>
+</head>
+<body>
+<div>
+    <label>Name:</label>
+    <input type="text" ng-model="yourName" placeholder="Enter a name here">
+    <hr>
+    <h1>Hello {{yourName}}!</h1>
+
+    <form>
+        <input id="clickMe" type="button" value="Connect" onclick="doConnect();"/>
+        <input id="clickMe" type="button" value="Subscribe" onclick="doSubscribe();"/>
+        <input id="clickMe" type="button" value="Disconnect" onclick="doDisconnect();"/>
+    </form>
+</div>
+</body>
+</html>

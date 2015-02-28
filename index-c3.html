@@ -1,0 +1,66 @@
+<!doctype html>
+<html ng-app="mqttApp">
+<head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="https://code.angularjs.org/1.3.8/angular.js"></script>
+    <script src="https://code.angularjs.org/1.3.8/angular-route.js "></script>
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/JavaScript" src="ws31.js"></script>
+    <script type="text/JavaScript" src="mq.js"></script>
+    <link href="/c3-0.4.9/c3.css" rel="stylesheet" >
+    <!-- Load d3.js and c3.js -->
+    <script src="/c3-0.4.9/c3.min.js"></script>
+    <script type="text/JavaScript" src="/c3-0.4.9/c3.js"></script>
+    <script src="require.js"></script>
+    <script src="c3-test.js"></script>
+    <script src="chart.js"></script>
+    <script src="/c3-0.4.9/c3.min.js"></script>
+    <script type="text/JavaScript" src="/c3-0.4.9/c3.js"></script>
+</head>
+<body ng-controller="mqttCtrl">
+<!--Div that will hold the pie chart-->
+
+<div class="progress-mqtt" topic="topics['Stellaris-1/system/temp']"></div>
+<form class="form-inline has-success">
+    <div class="form-group">
+        <label>Host</label>
+        <input type="text" class="form-control" ng-model="host" placeholder="{{host}}">
+        <label>Port</label>
+        <input type="text" class="form-control" ng-model="port" placeholder="{{port}}">
+    </div>
+    <button type="button" class="btn btn-primary" ng-click="connect()">Connect</button>
+    <button type="button" class="btn btn-primary" ng-click="disconnect()">Disconnect</button>
+    Updates <kbd>{{updates}}</kbd> {{log}}
+</form>
+
+<table class="table table-striped table-bordered table-condensed">
+    <thead>
+    <td>NAME</td>
+    <td>VALUE</td>
+    <td>updates</td>
+    </thead>
+    <tbody>
+    <tr ng-repeat="topic in topics | orderBy : 'name'">
+        <td class="text-right"><a href="#/topicMeta/{{ topic.name }}">
+            <small>{{ topic.name }}</small>
+        </a></td>
+        <td>
+            <small>{{ topic.value }}</small>
+        </td>
+        <td>
+            <small>{{ topic.count }}</small>
+        </td>
+        <td><kbd ng-click="disconnect()">SET</kbd></td>
+    </tr>
+    </tbody>
+</table>
+<div ng-view></div>
+<div class="delta-time" topic="topics['Stellaris-1/system/uptime']"></div>
+<div class="abs-time" topic="topics['Stellaris-1/system/now']"></div>
+<div class="lmr-gauge" topic="topics['Stellaris-1/system/temp']"></div>
+
+</body>
+</html>
