@@ -13,15 +13,16 @@
     <script src="require.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">google.load("visualization", "1.0", {'packages': ["corechart","gauge"]});</script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="d3.css">
 </head>
-<body ng-controller="mqttCtrl">
+<body ng-controller="mqttCtrl" BGCOLOR="#010101">
 
 <div class="row">
-    <div class="delta-time col-md-2" topic="topics['Stellaris-1/system/uptime']" ></div>
+    <div class="delta-time col-md-2" topic="Stellaris-1/system/uptime" ></div>
+    <div class="abs-time col-md-2" topic="Stellaris-1/system/now" ></div>
     <div class="lmr-gauge col-md-1" topic="topics['Stellaris-1/system/temp']" ></div>
-    <div class="lmr-gauge col-md-2" topic="topics['Stellaris-1/system/temp']" ></div>
-    <div class="lmr-gauge col-md-1" topic="topics['Stellaris-1/system/uptime']" ></div>
-
+    <bars-chart class="col-md-3" topic="Stellaris-1/system/temp" style="width: 600px; height: 300px"></bars-chart>
 </div>
 
 
@@ -39,7 +40,7 @@
 
 <table class="table table-striped table-bordered table-condensed">
     <thead>
-    <td>NAME</td>
+    <td data-toggle="tooltip" data-position="top" tooltip>NAME</td>
     <td>VALUE</td>
     <td>updates</td>
     </thead>
